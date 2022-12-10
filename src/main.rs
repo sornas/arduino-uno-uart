@@ -30,10 +30,9 @@ impl CountDown for Timer {
         // > 1/(57600Hz) * (16MHz)
         // 2500/9, approx. 277.7777  (dimensionless)
         // (Round up)
-        if bits < 278 {
+        if bits < 256 {
             Err(nb::Error::WouldBlock)
         } else {
-            // 0 or bits % 278?
             self.inner.tcnt1.write(|w| unsafe { w.bits(0) });
             Ok(())
         }
