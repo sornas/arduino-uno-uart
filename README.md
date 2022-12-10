@@ -7,3 +7,13 @@ the serial connection (`cargo run` if you wish to try yourself) so at least the
 timing code seems to work haha.
 
 Also the behaviour changes between nightly-2022-11-19 and nightly-2022-11-20.
+
+If reads are fixed, there's a few other things that would be nice:
+
+- Handle more baudrates. At least some standard ones, but it would be cool to
+  work with arbitrary ones.
+- Can we work with any counter?
+- Can we be more generic? For example, a crate that wraps an arbitrary timer and
+  gives a (slower) arbitrary timer, handling "fractions" correctly.
+- A buffered reader that works with interrupts and a (const generic-sized?)
+  buffer.

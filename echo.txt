@@ -3,7 +3,7 @@
 
 note
 lower nibble:  3333 333b bbbb bbb7 7777 777f ff
-Higher nibble: 4261 5370 4261 5370 4261 5370 42
+higher nibble: 4261 5370 4261 5370 4261 5370 42
 
 and yes, it's the same mapping backwards.
 
