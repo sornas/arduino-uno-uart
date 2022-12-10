@@ -1,56 +1,9 @@
-`avr-hal-template`
-==================
-[`cargo-generate`] template for jumpstarting projects on common AVR
-microcontroller boards.  This template supports the following hardware at this
-time:
+Trying to get something like
+[SoftwareSerial](https://docs.arduino.cc/learn/built-in-libraries/software-serial)
+to work in order to use my ESP8266 (ESP01?). `bitbang-hal` seems buggy since
+there's two PRs and one issue about its serial implementation. With one of the
+PRs applied I can send all bytes `0x00..=0xFF` to the connected computer over
+the serial connection (`cargo run` if you wish to try yourself) so at least the
+timing code seems to work haha.
 
- - Arduino Leonardo
- - Arduino Mega 2560
- - Arduino Mega 1280
- - Arduino Nano
- - Arduino Nano New Bootloader (Manufactured after January 2018)
- - Arduino Uno
- - SparkFun ProMicro
- - Adafruit Trinket
- - Adafruit Trinket Pro
-
-## Usage
-If you don't have them already, install [`cargo-generate`] and [`ravedude`]:
-
-```bash
-cargo install cargo-generate
-cargo install ravedude
-```
-
-Then instanciate this template:
-
-```bash
-cargo generate --git https://github.com/Rahix/avr-hal-template.git
-```
-
-You will be prompted to select your board - do so and you're ready to roll!
-Everything is prepared so you should be able to just
-
-```bash
-cargo run
-```
-
-and see a blinky flashed to your board!
-
-[`cargo-generate`]: https://github.com/cargo-generate/cargo-generate
-[`ravedude`]: https://github.com/Rahix/avr-hal/tree/next/ravedude
-
-## License
-Licensed under either of
-
- - Apache License, Version 2.0
-   ([LICENSE-APACHE](LICENSE-APACHE) or <http://www.apache.org/licenses/LICENSE-2.0>)
- - MIT license
-   ([LICENSE-MIT](LICENSE-MIT) or <http://opensource.org/licenses/MIT>)
-
-at your option.
-
-## Contribution
-Unless you explicitly state otherwise, any contribution intentionally submitted
-for inclusion in the work by you, as defined in the Apache-2.0 license, shall
-be dual licensed as above, without any additional terms or conditions.
+Also the behaviour changes between nightly-2022-11-19 and nightly-2022-11-20.
