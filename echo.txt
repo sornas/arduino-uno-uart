@@ -1,0 +1,11 @@
+00000000: 4323 6313 5333 730b 4b2b 6b1b 5b3b 7b07  C#c.S3s.K+k.[;{.
+00000010: 4727 6717 5737 770f 4f2f 0a              G'g.W7w.O/.
+
+note
+lower nibble:  3333 333b bbbb bbb7 7777 777f ff
+Higher nibble: 4261 5370 4261 5370 4261 5370 42
+
+and yes, it's the same mapping backwards.
+
+00000000: 2f4f 0f77 3757 1767 2747 077b 3b5b 1b6b  /O.w7W.g'G.{;[.k
+00000010: 2b4b 0b73 3353 1363 2343 0a              +K.s3S.c#C.

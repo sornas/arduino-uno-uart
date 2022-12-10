@@ -71,5 +71,8 @@ fn main() -> ! {
         serial.write(b).unwrap();
     }
 
-    loop {}
+    loop {
+        let b = serial.read().unwrap();
+        serial.write(b).unwrap();
+    }
 }
