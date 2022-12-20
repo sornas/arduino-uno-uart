@@ -36,7 +36,7 @@ impl<TX, RX, Timer, E> Serial<TX, RX, Timer>
 where
     TX: OutputPin<Error = E>,
     RX: InputPin<Error = E>,
-    Timer: CountDown + Periodic,
+    Timer: CountDown<Time = bool> + Periodic,
 {
     /// Create instance
     pub fn new(tx: TX, rx: RX, timer: Timer) -> Self {
@@ -47,18 +47,29 @@ where
     fn wait_for_timer(&mut self) {
         block!(self.timer.wait()).ok();
     }
+
+    #[inline]
+    fn start_wait_long(&mut self) {
+        self.timer.start(true);
+    }
+
+    #[inline]
+    fn start_wait_short(&mut self) {
+        self.timer.start(false);
+    }
 }
 
 impl<TX, RX, Timer, E> serial::Write<u8> for Serial<TX, RX, Timer>
 where
     TX: OutputPin<Error = E>,
     RX: InputPin<Error = E>,
-    Timer: CountDown + Periodic,
+    Timer: CountDown<Time = bool> + Periodic,
 {
     type Error = crate::serial::Error<E>;
 
     fn write(&mut self, byte: u8) -> nb::Result<(), Self::Error> {
         let mut data_out = byte;
+        self.start_wait_long();
         self.tx.set_low().map_err(Error::Bus)?; // start bit
         self.wait_for_timer();
         for _bit in 0..8 {
@@ -84,7 +95,7 @@ impl<TX, RX, Timer, E> serial::Read<u8> for Serial<TX, RX, Timer>
 where
     TX: OutputPin<Error = E>,
     RX: InputPin<Error = E>,
-    Timer: CountDown + Periodic,
+    Timer: CountDown<Time = bool> + Periodic,
 {
     type Error = crate::serial::Error<E>;
 
@@ -92,11 +103,14 @@ where
         let mut data_in = 0;
         // wait for start bit
         while self.rx.is_high().map_err(Error::Bus)? {}
+        self.start_wait_short();
+        self.wait_for_timer();
+        self.start_wait_long();
         self.wait_for_timer();
         for _bit in 0..8 {
-            data_in <<= 1;
+            data_in >>= 1;
             if self.rx.is_high().map_err(Error::Bus)? {
-                data_in |= 1
+                data_in |= 1 << 7;
             }
             self.wait_for_timer();
         }

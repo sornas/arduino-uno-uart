@@ -16,6 +16,7 @@ struct Timer {
     // TODO: Do we? Should be able to use the prescaler.
     inner: TC1,
     skip: u8,
+    long: bool,
 }
 
 impl Timer {
@@ -23,17 +24,19 @@ impl Timer {
         Self {
             inner: timer,
             skip: 2,
+            long: true,
         }
     }
 }
 
 impl CountDown for Timer {
-    type Time = ();
+    type Time = bool;
 
-    fn start<T>(&mut self, _: T) {
+    fn start<T: Into<bool>>(&mut self, long: T) {
         self.inner.tccr1b.write(|w| w.cs1().direct());
         self.inner.tcnt1.write(|w| unsafe { w.bits(0) });
         self.skip = 2;
+        self.long = long.into();
     }
 
     fn wait(&mut self) -> nb::Result<(), void::Void> {
@@ -44,7 +47,7 @@ impl CountDown for Timer {
         } else {
             self.skip -= 1;
         }
-        if bits < 1667 {
+        if (self.long && bits < 1667) || (!self.long && bits < 833) {
             Err(nb::Error::WouldBlock)
         } else {
             self.inner.tcnt1.write(|w| unsafe { w.bits(0) });
@@ -60,8 +63,7 @@ fn main() -> ! {
     let dp = arduino_hal::Peripherals::take().unwrap();
     let pins = arduino_hal::pins!(dp);
 
-    let mut timer = Timer::new(dp.TC1);
-    timer.start(());
+    let timer = Timer::new(dp.TC1);
     let mut serial = Serial::new(pins.d1.into_output(), pins.d0.into_pull_up_input(), timer);
 
     // let mut serial =
